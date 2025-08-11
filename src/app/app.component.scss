@@ -1,0 +1,41 @@
+:host ::ng-deep .mat-mdc-card-content{
+  background-color: #EEE;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  max-height: 300px;
+  overflow: auto;
+}
+h2{
+  padding: 10px;
+  background-color: #1D1D1D;
+  color: white;
+}
+.content-array{
+  word-break: break-all;
+}
+.container{
+  height: calc(100% - 52px);
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+
+}
+.editor{
+  min-height: 400px;
+}
+.context{
+  height: 100%;
+  width: 100%;
+  background-color: #EFEFEF;
+}
+.results{
+  padding: 20px;
+}
+.results .row{
+  margin-bottom: 30px;
+}
+
+h2{
+  margin: 0;
+}
