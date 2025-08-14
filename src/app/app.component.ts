@@ -16,12 +16,13 @@ export class AppComponent {
   arraySql: string = "";
   arrayRaw: string = "";
   checked: any;
+  skipNumber: boolean = false;
 
   toArray(){
     this.array = [];
     this.value.split('\n').forEach(item => {
       if( this.checked && item === "") { return }
-      if (isNaN(parseInt(item))) {
+      if (isNaN(parseInt(item)) || this.skipNumber) {
         this.array.push(item);
       } else {
         this.array.push(parseInt(item))
@@ -51,13 +52,13 @@ export class AppComponent {
     this.value.split('\n').forEach((item, i) => {
       if(this.checked && item === "") { return }
       if(i+1 < total) {
-        if (isNaN(parseInt(item))) {
+        if (isNaN(parseInt(item)) || this.skipNumber) {
           this.arraySql += `"${item}", `;
         } else {
           this.arraySql += `${item}, `;
         }
       }else {
-        if (isNaN(parseInt(item))) {
+        if (isNaN(parseInt(item)) || this.skipNumber) {
           this.arraySql += `"${item}" )`;
         } else {
           this.arraySql += `${item} )`;
@@ -71,6 +72,12 @@ export class AppComponent {
 
   IgnoreSpace($event: any) {
     this.checked = $event.checked;
+    this.toArray()
+  }
+
+  IgnoreNumber($event: any) {
+    this.skipNumber = $event.checked;
+    console.log(this.skipNumber)
     this.toArray()
   }
 }
