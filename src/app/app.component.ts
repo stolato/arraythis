@@ -3,6 +3,7 @@ import 'brace';
 import 'brace/mode/text';
 import 'brace/theme/github';
 import 'brace/theme/monokai.js';
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,8 @@ import 'brace/theme/monokai.js';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  constructor(private snackBar: MatSnackBar) {
+  }
   title = 'arraythis';
   value: string = "";
   array: any[] = [];
@@ -79,5 +82,11 @@ export class AppComponent {
     this.skipNumber = $event.checked;
     console.log(this.skipNumber)
     this.toArray()
+  }
+
+  protected copyToClipboard() {
+    this.snackBar.open("Copied to clipboard", "Close", {
+      duration: 2000,
+    })
   }
 }

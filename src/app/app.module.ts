@@ -12,6 +12,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {MatInputModule} from "@angular/material/input";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {FormsModule} from "@angular/forms";
+import {MatIconModule} from "@angular/material/icon";
+import {ClipboardModule} from "@angular/cdk/clipboard";
+import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {MatButtonModule} from "@angular/material/button";
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {
 };
@@ -37,7 +41,11 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {
     NgbModule,
     MatInputModule,
     MatSlideToggleModule,
-    FormsModule
+    FormsModule,
+    MatIconModule,
+    ClipboardModule,
+    MatSnackBarModule,
+    MatButtonModule,
   ],
   providers: [{
     provide: ACE_CONFIG,

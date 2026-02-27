@@ -10,12 +10,20 @@
     </div>
     <div class="col-md-3 results">
       <div class="row">
-        <p>
-          <mat-slide-toggle (change)="IgnoreSpace($event)" [(ngModel)]="checked">Ignorar Linha Vazia</mat-slide-toggle>
-        </p>
-        <p>
-          <mat-slide-toggle (change)="IgnoreNumber($event)" [(ngModel)]="skipNumber">Ignorar Numero</mat-slide-toggle>
-        </p>
+        <mat-card class="example-card" appearance="outlined">
+          <mat-card-actions>
+            <div class="options">
+              <p>
+                <mat-slide-toggle (change)="IgnoreSpace($event)" [(ngModel)]="checked">Ignorar Linha Vazia</mat-slide-toggle>
+              </p>
+              <p>
+                <mat-slide-toggle (change)="IgnoreNumber($event)" [(ngModel)]="skipNumber">Ignorar Numero</mat-slide-toggle>
+              </p>
+            </div>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+        <div class="row">
         <mat-card class="example-card" appearance="outlined">
           <mat-card-header>
             <mat-card-title>Raw</mat-card-title>
@@ -23,6 +31,11 @@
           <mat-card-content>
             <span class="content-array">{{ arrayRaw }}</span>
           </mat-card-content>
+          <mat-card-actions class="copy">
+            <button mat-flat-button (click)="copyToClipboard()" [cdkCopyToClipboard]="arrayRaw">
+              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="copy_all"></mat-icon>
+            </button>
+          </mat-card-actions>
         </mat-card>
       </div>
       <div class="row">
@@ -37,6 +50,11 @@
               {{ array.length > 1 ? JSON.stringify(array) : '' }}
             </span>
           </mat-card-content>
+          <mat-card-actions class="copy">
+            <button mat-flat-button (click)="copyToClipboard()" [cdkCopyToClipboard]="JSON.stringify(array)">
+              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="copy_all"></mat-icon>
+            </button>
+          </mat-card-actions>
         </mat-card>
       </div>
       <div class="row">
@@ -47,6 +65,11 @@
           <mat-card-content>
             <span class="content-array">{{ arraySql }}</span>
           </mat-card-content>
+          <mat-card-actions class="copy">
+            <button mat-flat-button (click)="copyToClipboard()" [cdkCopyToClipboard]="arraySql">
+              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="copy_all"></mat-icon>
+            </button>
+          </mat-card-actions>
         </mat-card>
       </div>
     </div>
