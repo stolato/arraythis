@@ -1,53 +1,234 @@
-:host ::ng-deep .mat-mdc-card-content{
-  background-color: #EEE;
-  padding: 20px;
-  border-radius: 5px;
-  margin-bottom: 20px;
-  max-height: 300px;
-  overflow: auto;
+:host {
+  display: block;
+  height: 100vh;
+  width: 100vw;
+  background-color: #0f1115;
+  color: #e2e8f0;
+  font-family: 'Inter', 'Roboto', sans-serif;
+  overflow: hidden;
 }
-h2{
-  padding: 10px;
-  background-color: #1D1D1D;
-  color: white;
-}
-.content-array{
-  word-break: break-all;
-}
-.container{
-  height: calc(100% - 52px);
-  width: 100%;
-  max-width: 100%;
-  padding: 0;
 
-}
-.editor{
-  min-height: 400px;
-}
-.context{
+.app-container {
+  display: flex;
+  flex-direction: column;
   height: 100%;
-  width: 100%;
-  background-color: #EFEFEF;
-}
-.results{
-  padding: 20px;
-}
-.results .row{
-  margin-bottom: 30px;
 }
 
-h2{
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background-color: #1a1d24;
+  border-bottom: 1px solid #2d313a;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.header-content h1 {
   margin: 0;
-}
-.copy{
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #61dafb;
+  letter-spacing: -0.5px;
 }
 
-.options{
+.subtitle {
+  font-size: 0.875rem;
+  color: #94a3b8;
+}
+
+.main-content {
   display: flex;
-  justify-content: center;
+  flex: 1;
+  overflow: hidden;
+  padding: 24px;
+  gap: 24px;
+}
+
+.editor-section {
+  flex: 1;
+  display: flex;
   flex-direction: column;
-  margin-top: 14px;
+  background: #1e2128;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  border: 1px solid #2d313a;
+}
+
+.ace-editor {
+  flex: 1;
+  width: 100%;
+  font-size: 14px !important;
+
+  /* Custom ACE Editor Theme Overrides to match the app layout */
+  ::ng-deep .ace-monokai {
+    background-color: #1e2128 !important;
+    color: #e2e8f0 !important;
+  }
+  
+  ::ng-deep .ace-monokai .ace_gutter {
+    background-color: #1a1d24 !important;
+    color: #64748b !important;
+    border-right: 1px solid #2d313a !important;
+  }
+  
+  ::ng-deep .ace-monokai .ace_marker-layer .ace_active-line,
+  ::ng-deep .ace-monokai .ace_gutter-active-line {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+  }
+
+  ::ng-deep .ace-monokai .ace_cursor {
+    color: #61dafb !important;
+  }
+
+  ::ng-deep .ace-monokai .ace_marker-layer .ace_selection {
+    background: rgba(97, 218, 251, 0.2) !important;
+  }
+}
+
+.results-section {
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  padding-right: 8px;
+
+  /* Scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 10px;
+  }
+}
+
+.premium-card {
+  background-color: #1e2128 !important;
+  border: 1px solid #2d313a;
+  border-radius: 12px !important;
+  color: #e2e8f0 !important;
+  transition: border-color 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2) !important;
+
+  &:hover {
+    border-color: #475569;
+  }
+
+  mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px 0 !important;
+    
+    mat-card-title {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #93c5fd;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+
+      mat-icon {
+        font-size: 1.2rem;
+        width: 1.2rem;
+        height: 1.2rem;
+      }
+    }
+  }
+}
+
+.options-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px !important;
+
+  color: #e2e8f0 !important;
+
+  ::ng-deep .mat-mdc-slide-toggle-content,
+  ::ng-deep .mdc-label {
+    color: #e2e8f0 !important;
+    font-size: 0.9rem;
+  }
+}
+
+.result-card {
+  mat-card-content {
+    padding: 16px 20px 20px !important;
+  }
+}
+
+.content-display {
+  background-color: #0f1115;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #2d313a;
+  color: #a78bfa;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  word-break: break-all;
+  max-height: 150px;
+  overflow-y: auto;
+
+  /* Scrollbar styling */
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 10px;
+  }
+}
+
+.copy-button {
+  color: #94a3b8 !important;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #61dafb !important;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  :host {
+    overflow: auto; /* Let the host scroll if needed */
+  }
+
+  .app-header {
+    padding: 12px 16px;
+  }
+
+  .header-content h1 {
+    font-size: 1.25rem;
+  }
+
+  .main-content {
+    flex-direction: column;
+    padding: 16px;
+    overflow-y: auto;
+  }
+
+  .editor-section {
+    min-height: 400px;
+    flex: none;
+  }
+
+  .results-section {
+    width: 100%;
+    overflow-y: visible;
+    padding-right: 0;
+  }
 }

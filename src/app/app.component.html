@@ -1,78 +1,73 @@
-<div class="container">
-    <div class="col-md-12 p-0">
-      <h2>
-        Array Items
-      </h2>
-  </div>
-  <div class="row context">
-    <div class="col-md-9 editor">
-      <ace [mode]="'text'" [theme]="'monokai'" [(value)]="value" (keyup)="toArray()" (change)="toArray()"></ace>
+<div class="app-container">
+  <header class="app-header">
+    <div class="header-content">
+      <h1>ArrayThis</h1>
+      <span class="subtitle">Quick array formatting utility</span>
     </div>
-    <div class="col-md-3 results">
-      <div class="row">
-        <mat-card class="example-card" appearance="outlined">
-          <mat-card-actions>
-            <div class="options">
-              <p>
-                <mat-slide-toggle (change)="IgnoreSpace($event)" [(ngModel)]="checked">Ignorar Linha Vazia</mat-slide-toggle>
-              </p>
-              <p>
-                <mat-slide-toggle (change)="IgnoreNumber($event)" [(ngModel)]="skipNumber">Ignorar Numero</mat-slide-toggle>
-              </p>
-            </div>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-        <div class="row">
-        <mat-card class="example-card" appearance="outlined">
-          <mat-card-header>
-            <mat-card-title>Raw</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <span class="content-array">{{ arrayRaw }}</span>
-          </mat-card-content>
-          <mat-card-actions class="copy">
-            <button mat-flat-button (click)="copyToClipboard()" [cdkCopyToClipboard]="arrayRaw">
-              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="copy_all"></mat-icon>
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-      <div class="row">
-        <mat-card class="example-card" appearance="outlined">
-          <mat-card-header>
-            <mat-card-title>
-              Array Typescript
-            </mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <span class="content-array">
-              {{ array.length > 1 ? JSON.stringify(array) : '' }}
-            </span>
-          </mat-card-content>
-          <mat-card-actions class="copy">
-            <button mat-flat-button (click)="copyToClipboard()" [cdkCopyToClipboard]="JSON.stringify(array)">
-              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="copy_all"></mat-icon>
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-      <div class="row">
-        <mat-card class="example-card" appearance="outlined">
-          <mat-card-header>
-            <mat-card-title>Array</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <span class="content-array">{{ arraySql }}</span>
-          </mat-card-content>
-          <mat-card-actions class="copy">
-            <button mat-flat-button (click)="copyToClipboard()" [cdkCopyToClipboard]="arraySql">
-              <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="copy_all"></mat-icon>
-            </button>
-          </mat-card-actions>
-        </mat-card>
-      </div>
+    <div class="header-actions">
+      <button mat-stroked-button color="warn" (click)="clearEditor()">
+        <mat-icon>delete_sweep</mat-icon>
+        Clear Editor
+      </button>
     </div>
-  </div>
-</div>
+  </header>
 
+  <main class="main-content">
+    <div class="editor-section">
+      <ace [mode]="'text'" [theme]="'monokai'" [(value)]="value" (keyup)="toArray()" (change)="toArray()" class="ace-editor"></ace>
+    </div>
+
+    <div class="results-section">
+      <mat-card class="options-card premium-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>settings</mat-icon>
+            Settings
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="options-content">
+          <mat-slide-toggle color="primary" (change)="IgnoreSpace($event)" [(ngModel)]="checked">Ignore Empty Lines</mat-slide-toggle>
+          <mat-slide-toggle color="primary" (change)="IgnoreNumber($event)" [(ngModel)]="skipNumber">Force Strings (Ignore Numbers)</mat-slide-toggle>
+          <mat-slide-toggle color="primary" (change)="ToggleTrim($event)" [(ngModel)]="trimSpaces">Trim Spaces</mat-slide-toggle>
+          <mat-slide-toggle color="primary" (change)="ToggleSqlQuotes($event)" [checked]="sqlQuotes === 'single'">Single Quotes SQL ('')</mat-slide-toggle>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="result-card premium-card">
+        <mat-card-header>
+          <mat-card-title>Raw String</mat-card-title>
+          <button mat-icon-button (click)="copyToClipboard()" [cdkCopyToClipboard]="arrayRaw" aria-label="Copy raw string" class="copy-button">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="content-display">{{ arrayRaw || 'No content' }}</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="result-card premium-card">
+        <mat-card-header>
+          <mat-card-title>TypeScript Array</mat-card-title>
+          <button mat-icon-button (click)="copyToClipboard()" [cdkCopyToClipboard]="JSON.stringify(array)" aria-label="Copy TS array" class="copy-button">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="content-display">{{ array.length > 0 ? JSON.stringify(array) : 'No content' }}</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="result-card premium-card">
+        <mat-card-header>
+          <mat-card-title>SQL In Clause</mat-card-title>
+          <button mat-icon-button (click)="copyToClipboard()" [cdkCopyToClipboard]="arraySql" aria-label="Copy SQL" class="copy-button">
+            <mat-icon>content_copy</mat-icon>
+          </button>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="content-display">{{ arraySql || 'No content' }}</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </main>
+</div>

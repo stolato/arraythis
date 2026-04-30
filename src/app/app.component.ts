@@ -18,75 +18,86 @@ export class AppComponent {
   array: any[] = [];
   arraySql: string = "";
   arrayRaw: string = "";
-  checked: any;
+  checked: boolean = false;
   skipNumber: boolean = false;
+  trimSpaces: boolean = false;
+  sqlQuotes: 'single' | 'double' = 'double';
 
-  toArray(){
-    this.array = [];
-    this.value.split('\n').forEach(item => {
-      if( this.checked && item === "") { return }
-      if (isNaN(parseInt(item)) || this.skipNumber) {
-        this.array.push(item);
+  toArray() {
+    if (!this.value) {
+      this.array = [];
+      this.arrayRaw = "";
+      this.arraySql = "";
+      return;
+    }
+
+    const lines = this.value.split('\n');
+    const processedLines: any[] = [];
+
+    for (let item of lines) {
+      if (this.trimSpaces) {
+        item = item.trim();
+      }
+      if (this.checked && item === "") {
+        continue;
+      }
+      
+      let parsedItem: string | number = item;
+      // Convert to number if it's not empty, doesn't contain just spaces, and is a valid number
+      if (!this.skipNumber && item.trim() !== "" && !isNaN(Number(item))) {
+         parsedItem = Number(item);
+      }
+      processedLines.push(parsedItem);
+    }
+
+    this.array = processedLines;
+    
+    // Raw
+    this.arrayRaw = processedLines.join(', ');
+    
+    // SQL
+    const quote = this.sqlQuotes === 'single' ? "'" : '"';
+    const sqlItems = processedLines.map(item => {
+      if (typeof item === 'number') {
+        return item.toString();
       } else {
-        this.array.push(parseInt(item))
+        return `${quote}${item}${quote}`;
       }
     });
-    this.toArraySql()
-    this.toArrayRaw()
-  }
-
-  toArrayRaw(){
-    this.arrayRaw = '';
-    const total = this.value.split('\n').length
-    this.value.split('\n').forEach((item, i) => {
-      if(this.checked && item === "") { return }
-      if(i+1 < total) {
-        this.arrayRaw += item + ", ";
-      }else{
-        this.arrayRaw += item + "";
-      }
-    });
-  }
-
-  toArraySql(){
-    this.arraySql = '';
-    this.arraySql += `(`;
-    const total = this.value.split('\n').length
-    this.value.split('\n').forEach((item, i) => {
-      if(this.checked && item === "") { return }
-      if(i+1 < total) {
-        if (isNaN(parseInt(item)) || this.skipNumber) {
-          this.arraySql += `"${item}", `;
-        } else {
-          this.arraySql += `${item}, `;
-        }
-      }else {
-        if (isNaN(parseInt(item)) || this.skipNumber) {
-          this.arraySql += `"${item}" )`;
-        } else {
-          this.arraySql += `${item} )`;
-        }
-      }
-    });
+    this.arraySql = sqlItems.length > 0 ? `(${sqlItems.join(', ')})` : '';
   }
 
   protected readonly JSON = JSON;
 
-
   IgnoreSpace($event: any) {
     this.checked = $event.checked;
-    this.toArray()
+    this.toArray();
   }
 
   IgnoreNumber($event: any) {
     this.skipNumber = $event.checked;
-    console.log(this.skipNumber)
-    this.toArray()
+    this.toArray();
+  }
+
+  ToggleTrim($event: any) {
+    this.trimSpaces = $event.checked;
+    this.toArray();
+  }
+
+  ToggleSqlQuotes($event: any) {
+    this.sqlQuotes = $event.checked ? 'single' : 'double';
+    this.toArray();
+  }
+
+  clearEditor() {
+    this.value = '';
+    this.toArray();
   }
 
   protected copyToClipboard() {
     this.snackBar.open("Copied to clipboard", "Close", {
       duration: 2000,
-    })
+      panelClass: ['success-snackbar']
+    });
   }
 }
