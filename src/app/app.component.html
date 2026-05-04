@@ -1,73 +1,65 @@
 <div class="app-container">
   <header class="app-header">
-    <div class="header-content">
-      <h1>ArrayThis</h1>
-      <span class="subtitle">Quick array formatting utility</span>
+    <div class="brand">
+      <mat-icon class="brand-icon">data_array</mat-icon>
+      <span class="brand-name">ArrayThis</span>
     </div>
-    <div class="header-actions">
-      <button mat-stroked-button color="warn" (click)="clearEditor()">
-        <mat-icon>delete_sweep</mat-icon>
-        Clear Editor
+    <div class="header-right">
+      <span class="item-badge" *ngIf="array.length > 0">{{ array.length }} items</span>
+      <button mat-button class="clear-btn" (click)="clearEditor()" *ngIf="value">
+        <mat-icon>clear_all</mat-icon>
+        Clear
       </button>
     </div>
   </header>
 
   <main class="main-content">
-    <div class="editor-section">
+    <section class="editor-pane">
+      <div class="pane-header">
+        <span class="pane-label">Input</span>
+        <span class="pane-hint">one item per line</span>
+      </div>
       <ace [mode]="'text'" [theme]="'monokai'" [(value)]="value" (keyup)="toArray()" (change)="toArray()" class="ace-editor"></ace>
-    </div>
+    </section>
 
-    <div class="results-section">
-      <mat-card class="options-card premium-card">
-        <mat-card-header>
-          <mat-card-title>
-            <mat-icon>settings</mat-icon>
-            Settings
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="options-content">
-          <mat-slide-toggle color="primary" (change)="IgnoreSpace($event)" [(ngModel)]="checked">Ignore Empty Lines</mat-slide-toggle>
-          <mat-slide-toggle color="primary" (change)="IgnoreNumber($event)" [(ngModel)]="skipNumber">Force Strings (Ignore Numbers)</mat-slide-toggle>
-          <mat-slide-toggle color="primary" (change)="ToggleTrim($event)" [(ngModel)]="trimSpaces">Trim Spaces</mat-slide-toggle>
-          <mat-slide-toggle color="primary" (change)="ToggleSqlQuotes($event)" [checked]="sqlQuotes === 'single'">Single Quotes SQL ('')</mat-slide-toggle>
-        </mat-card-content>
-      </mat-card>
+    <section class="output-pane">
+      <div class="settings-bar">
+        <label class="setting-item">
+          <mat-slide-toggle color="primary" (change)="IgnoreSpace($event)" [(ngModel)]="checked"></mat-slide-toggle>
+          <span>Skip empty</span>
+        </label>
+        <label class="setting-item">
+          <mat-slide-toggle color="primary" (change)="IgnoreNumber($event)" [(ngModel)]="skipNumber"></mat-slide-toggle>
+          <span>Force strings</span>
+        </label>
+        <label class="setting-item">
+          <mat-slide-toggle color="primary" (change)="ToggleTrim($event)" [(ngModel)]="trimSpaces"></mat-slide-toggle>
+          <span>Trim spaces</span>
+        </label>
+        <label class="setting-item">
+          <mat-slide-toggle color="primary" (change)="ToggleSqlQuotes($event)" [checked]="sqlQuotes === 'single'"></mat-slide-toggle>
+          <span>SQL ''</span>
+        </label>
+      </div>
 
-      <mat-card class="result-card premium-card">
-        <mat-card-header>
-          <mat-card-title>Raw String</mat-card-title>
-          <button mat-icon-button (click)="copyToClipboard()" [cdkCopyToClipboard]="arrayRaw" aria-label="Copy raw string" class="copy-button">
-            <mat-icon>content_copy</mat-icon>
-          </button>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="content-display">{{ arrayRaw || 'No content' }}</div>
-        </mat-card-content>
-      </mat-card>
+      <div class="tab-bar">
+        <button class="tab-btn" [class.active]="selectedTab === 'raw'" (click)="selectedTab = 'raw'">Raw</button>
+        <button class="tab-btn" [class.active]="selectedTab === 'ts'" (click)="selectedTab = 'ts'">TypeScript</button>
+        <button class="tab-btn" [class.active]="selectedTab === 'sql'" (click)="selectedTab = 'sql'">SQL IN</button>
+      </div>
 
-      <mat-card class="result-card premium-card">
-        <mat-card-header>
-          <mat-card-title>TypeScript Array</mat-card-title>
-          <button mat-icon-button (click)="copyToClipboard()" [cdkCopyToClipboard]="JSON.stringify(array)" aria-label="Copy TS array" class="copy-button">
-            <mat-icon>content_copy</mat-icon>
-          </button>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="content-display">{{ array.length > 0 ? JSON.stringify(array) : 'No content' }}</div>
-        </mat-card-content>
-      </mat-card>
+      <div class="output-body">
+        <div class="output-text" [class.active]="selectedTab === 'raw'">{{ arrayRaw || '' }}<span *ngIf="!arrayRaw" class="empty-hint">Paste a list on the left to see the result here</span></div>
+        <div class="output-text" [class.active]="selectedTab === 'ts'">{{ array.length > 0 ? JSON.stringify(array) : '' }}<span *ngIf="array.length === 0" class="empty-hint">Paste a list on the left to see the result here</span></div>
+        <div class="output-text" [class.active]="selectedTab === 'sql'">{{ arraySql || '' }}<span *ngIf="!arraySql" class="empty-hint">Paste a list on the left to see the result here</span></div>
+      </div>
 
-      <mat-card class="result-card premium-card">
-        <mat-card-header>
-          <mat-card-title>SQL In Clause</mat-card-title>
-          <button mat-icon-button (click)="copyToClipboard()" [cdkCopyToClipboard]="arraySql" aria-label="Copy SQL" class="copy-button">
-            <mat-icon>content_copy</mat-icon>
-          </button>
-        </mat-card-header>
-        <mat-card-content>
-          <div class="content-display">{{ arraySql || 'No content' }}</div>
-        </mat-card-content>
-      </mat-card>
-    </div>
+      <div class="output-footer">
+        <button mat-flat-button class="copy-btn" (click)="copyToClipboard()" [cdkCopyToClipboard]="getCurrentOutput()">
+          <mat-icon>content_copy</mat-icon>
+          Copy to clipboard
+        </button>
+      </div>
+    </section>
   </main>
 </div>

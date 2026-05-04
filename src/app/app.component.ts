@@ -67,7 +67,15 @@ export class AppComponent {
     this.arraySql = sqlItems.length > 0 ? `(${sqlItems.join(', ')})` : '';
   }
 
+  selectedTab: 'raw' | 'ts' | 'sql' = 'raw';
+
   protected readonly JSON = JSON;
+
+  getCurrentOutput(): string {
+    if (this.selectedTab === 'raw') return this.arrayRaw;
+    if (this.selectedTab === 'ts') return this.array.length > 0 ? JSON.stringify(this.array) : '';
+    return this.arraySql;
+  }
 
   IgnoreSpace($event: any) {
     this.checked = $event.checked;
