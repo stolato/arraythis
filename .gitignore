@@ -40,3 +40,8 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Wails desktop build output
+/desktop/frontend/
+/desktop/build/bin/
+/package.json.md5

@@ -11,6 +11,7 @@ import {FormsModule} from "@angular/forms";
 import {MatIconModule} from "@angular/material/icon";
 import {ClipboardModule} from "@angular/cdk/clipboard";
 import {MatButtonModule} from "@angular/material/button";
+import {environment} from '../environments/environment';
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {
   showPrintMargin: false,
@@ -27,7 +28,7 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {
     BrowserAnimationsModule,
     AceModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: !isDevMode(),
+      enabled: environment.serviceWorker && !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'

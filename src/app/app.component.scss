@@ -90,6 +90,22 @@
   }
 }
 
+// Desktop (Wails, macOS): header doubles as the window title bar.
+// --wails-draggable is inherited, so interactive children opt out explicitly.
+:host(.desktop-mac) {
+  .app-header {
+    --wails-draggable: drag;
+    padding-left: 92px; // native traffic lights end at ~78px
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .app-header button,
+  .item-badge {
+    --wails-draggable: no-drag;
+  }
+}
+
 // ---- MAIN LAYOUT ----
 
 .main-content {

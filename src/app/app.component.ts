@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
 import 'brace';
 import 'brace/mode/text';
 import 'brace/theme/github';
@@ -6,6 +6,16 @@ import 'brace/theme/monokai.js';
 
 type Tab = 'raw' | 'ts' | 'sql';
 type Theme = 'light' | 'dark';
+
+/** Wails injects `window.runtime` into the page; absent in the web build. */
+interface WailsRuntime {
+  WindowToggleMaximise(): void;
+}
+declare global {
+  interface Window {
+    runtime?: WailsRuntime;
+  }
+}
 
 const THEME_STORAGE_KEY = 'arraythis-theme';
 const THEME_BAR_COLORS: Record<Theme, string> = {dark: '#111113', light: '#fafafa'};
@@ -37,6 +47,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
   copied = false;
   theme: Theme = 'dark';
+
+  /**
+   * Desktop app on macOS: the title bar is hidden (TitleBarHiddenInset) and the
+   * native traffic lights sit on top of our header, which becomes the drag area.
+   */
+  @HostBinding('class.desktop-mac')
+  readonly isDesktopMac = !!window.runtime && /Mac/.test(navigator.userAgent);
 
   /** Touch devices get a native textarea: better keyboard, paste and selection than Ace. */
   readonly useNativeEditor = matchMedia('(pointer: coarse)').matches;
@@ -168,6 +185,13 @@ export class AppComponent implements OnInit, OnDestroy {
       this.copied = false;
       this.cdr.markForCheck();
     }, 1500);
+  }
+
+  /** Double-clicking the title area zooms the window, like a native macOS title bar. */
+  onHeaderDoubleClick(event: MouseEvent) {
+    if (!this.isDesktopMac) return;
+    if ((event.target as HTMLElement).closest('button, .item-badge')) return;
+    window.runtime?.WindowToggleMaximise();
   }
 
   // ---- Theme ----
