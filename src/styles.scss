@@ -1,7 +1,97 @@
-/* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+// Indigo palette matching the app accent (#818cf8 / #6366f1)
+$app-indigo: (
+  50: #eef2ff, 100: #e0e7ff, 200: #c7d2fe, 300: #a5b4fc, 400: #818cf8,
+  500: #6366f1, 600: #4f46e5, 700: #4338ca, 800: #3730a3, 900: #312e81,
+  A100: #c7d2fe, A200: #a5b4fc, A400: #818cf8, A700: #4f46e5,
+  contrast: (
+    50: rgba(0, 0, 0, 0.87), 100: rgba(0, 0, 0, 0.87), 200: rgba(0, 0, 0, 0.87),
+    300: rgba(0, 0, 0, 0.87), 400: rgba(0, 0, 0, 0.87), 500: white, 600: white,
+    700: white, 800: white, 900: white,
+    A100: rgba(0, 0, 0, 0.87), A200: rgba(0, 0, 0, 0.87), A400: rgba(0, 0, 0, 0.87), A700: white,
+  ),
+);
+
+$app-font: '"Inter", -apple-system, BlinkMacSystemFont, sans-serif';
+
+// Dark uses the lighter 400 shade, light the deeper 600 shade, for contrast on each background
+$app-dark-theme: mat.define-dark-theme((
+  color: (primary: mat.define-palette($app-indigo, 400, 300, 600), accent: mat.define-palette($app-indigo, 400, 300, 600)),
+  typography: mat.define-typography-config($font-family: $app-font),
+  density: 0,
+));
+$app-light-theme: mat.define-light-theme((
+  color: (primary: mat.define-palette($app-indigo, 600, 400, 800), accent: mat.define-palette($app-indigo, 600, 400, 800)),
+));
+
+@include mat.core();
+@include mat.typography-hierarchy($app-dark-theme);
+@include mat.slide-toggle-theme($app-dark-theme);
+@include mat.button-theme($app-dark-theme);
+@include mat.icon-theme($app-dark-theme);
+
+// ---- Theme tokens ----
+// Contrast (text on --app-surface): primary >13:1, secondary >7:1, muted >=4.5:1 (WCAG AA)
+
+@mixin dark-tokens {
+  color-scheme: dark;
+  --app-bg: #0c0c0e;
+  --app-surface: #111113;
+  --app-surface-raised: #18181b;
+  --app-border: #27272a;
+  --app-border-strong: #3f3f46;
+  --app-text-primary: #e4e4e7;
+  --app-text-secondary: #a1a1aa;
+  --app-text-muted: #8a8a93;
+  --app-accent: #818cf8;
+  --app-accent-soft: rgba(129, 140, 248, 0.1);
+  --app-accent-border: rgba(129, 140, 248, 0.22);
+  --app-output: #a78bfa;
+  --app-active-line: rgba(255, 255, 255, 0.025);
+  --app-selection: rgba(129, 140, 248, 0.18);
+  --app-cta: #4f46e5;
+  --app-cta-hover: #4338ca;
+  --app-success: #15803d;
+  --app-disabled-bg: #27272a;
+}
+
+@mixin light-tokens {
+  color-scheme: light;
+  --app-bg: #ffffff;
+  --app-surface: #fafafa;
+  --app-surface-raised: #f4f4f5;
+  --app-border: #e4e4e7;
+  --app-border-strong: #d4d4d8;
+  --app-text-primary: #18181b;
+  --app-text-secondary: #52525b;
+  --app-text-muted: #68686f;
+  --app-accent: #4f46e5;
+  --app-accent-soft: rgba(79, 70, 229, 0.08);
+  --app-accent-border: rgba(79, 70, 229, 0.25);
+  --app-output: #6d28d9;
+  --app-active-line: rgba(0, 0, 0, 0.035);
+  --app-selection: rgba(79, 70, 229, 0.15);
+  --app-cta: #4f46e5;
+  --app-cta-hover: #4338ca;
+  --app-success: #15803d;
+  --app-disabled-bg: #e4e4e7;
+
+  @include mat.slide-toggle-color($app-light-theme);
+  @include mat.button-color($app-light-theme);
+  @include mat.icon-color($app-light-theme);
+}
+
+// Default: follow the OS. An explicit choice (data-theme on <html>) overrides it.
+:root { @include dark-tokens; }
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) { @include light-tokens; }
+}
+
+:root[data-theme="light"] { @include light-tokens; }
+
+*, *::before, *::after { box-sizing: border-box; }
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-/* Importing Bootstrap SCSS file. */
-@import 'bootstrap/scss/bootstrap';
+body { margin: 0; font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif; background-color: var(--app-bg); }

@@ -1,9 +1,12 @@
+// Colors come from theme tokens defined in src/styles.scss (light + dark).
+
 :host {
   display: block;
   height: 100vh;
-  width: 100vw;
-  background-color: #0c0c0e;
-  color: #f4f4f5;
+  height: 100dvh;
+  width: 100%;
+  background-color: var(--app-bg);
+  color: var(--app-text-primary);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   overflow: hidden;
 }
@@ -14,10 +17,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 12px 0 20px;
   height: 50px;
-  border-bottom: 1px solid #27272a;
-  background: #111113;
+  border-bottom: 1px solid var(--app-border);
+  background: var(--app-surface);
   flex-shrink: 0;
 }
 
@@ -27,7 +30,7 @@
   gap: 8px;
 
   .brand-icon {
-    color: #818cf8;
+    color: var(--app-accent);
     font-size: 20px;
     width: 20px;
     height: 20px;
@@ -36,7 +39,7 @@
   .brand-name {
     font-size: 0.95rem;
     font-weight: 600;
-    color: #f4f4f5;
+    color: var(--app-text-primary);
     letter-spacing: -0.3px;
   }
 }
@@ -44,23 +47,24 @@
 .header-right {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .item-badge {
-  background: rgba(129, 140, 248, 0.1);
-  color: #818cf8;
-  border: 1px solid rgba(129, 140, 248, 0.22);
+  background: var(--app-accent-soft);
+  color: var(--app-accent);
+  border: 1px solid var(--app-accent-border);
   padding: 2px 10px;
   border-radius: 9999px;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 500;
   letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .clear-btn {
-  color: #52525b !important;
-  font-size: 0.78rem !important;
+  color: var(--app-text-muted) !important;
+  font-size: 0.8rem !important;
   min-width: unset !important;
   height: 32px !important;
   line-height: 32px !important;
@@ -74,7 +78,15 @@
   }
 
   &:hover {
-    color: #a1a1aa !important;
+    color: var(--app-text-primary) !important;
+  }
+}
+
+.theme-btn {
+  color: var(--app-text-muted) !important;
+
+  &:hover {
+    color: var(--app-text-primary) !important;
   }
 }
 
@@ -83,6 +95,7 @@
 .main-content {
   display: flex;
   height: calc(100vh - 50px);
+  height: calc(100dvh - 50px);
   overflow: hidden;
 }
 
@@ -90,9 +103,10 @@
 
 .editor-pane {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  border-right: 1px solid #27272a;
+  border-right: 1px solid var(--app-border);
   overflow: hidden;
 }
 
@@ -101,21 +115,21 @@
   align-items: center;
   justify-content: space-between;
   padding: 8px 14px;
-  border-bottom: 1px solid #27272a;
-  background: #111113;
+  border-bottom: 1px solid var(--app-border);
+  background: var(--app-surface);
   flex-shrink: 0;
 
   .pane-label {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: #52525b;
+    color: var(--app-text-secondary);
   }
 
   .pane-hint {
-    font-size: 0.68rem;
-    color: #3f3f46;
+    font-size: 0.75rem;
+    color: var(--app-text-muted);
     font-style: italic;
   }
 }
@@ -126,37 +140,62 @@
   font-size: 14px !important;
 
   ::ng-deep .ace-monokai {
-    background-color: #0c0c0e !important;
-    color: #e4e4e7 !important;
+    background-color: var(--app-bg) !important;
+    color: var(--app-text-primary) !important;
   }
 
   ::ng-deep .ace-monokai .ace_gutter {
-    background-color: #111113 !important;
-    color: #3f3f46 !important;
-    border-right: 1px solid #27272a !important;
+    background-color: var(--app-surface) !important;
+    color: var(--app-text-muted) !important;
+    border-right: 1px solid var(--app-border) !important;
   }
 
   ::ng-deep .ace-monokai .ace_marker-layer .ace_active-line,
   ::ng-deep .ace-monokai .ace_gutter-active-line {
-    background-color: rgba(255, 255, 255, 0.025) !important;
+    background-color: var(--app-active-line) !important;
   }
 
   ::ng-deep .ace-monokai .ace_cursor {
-    color: #818cf8 !important;
+    color: var(--app-accent) !important;
   }
 
   ::ng-deep .ace-monokai .ace_marker-layer .ace_selection {
-    background: rgba(129, 140, 248, 0.18) !important;
+    background: var(--app-selection) !important;
+  }
+}
+
+// Touch devices: plain textarea. 16px font prevents iOS zoom-on-focus.
+.native-editor {
+  flex: 1;
+  width: 100%;
+  resize: none;
+  border: none;
+  outline: none;
+  padding: 12px 14px;
+  background: var(--app-bg);
+  color: var(--app-text-primary);
+  caret-color: var(--app-accent);
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 16px;
+  line-height: 1.6;
+
+  &::placeholder {
+    color: var(--app-text-muted);
+    font-style: italic;
+  }
+
+  &:focus-visible {
+    box-shadow: inset 0 0 0 2px var(--app-accent);
   }
 }
 
 // ---- OUTPUT PANE ----
 
 .output-pane {
-  width: 420px;
+  width: clamp(340px, 36vw, 480px);
   display: flex;
   flex-direction: column;
-  background: #111113;
+  background: var(--app-surface);
   flex-shrink: 0;
 }
 
@@ -167,15 +206,15 @@
   flex-wrap: wrap;
   gap: 6px;
   padding: 12px 14px;
-  border-bottom: 1px solid #27272a;
+  border-bottom: 1px solid var(--app-border);
 }
 
 .setting-item {
   display: flex;
   align-items: center;
   gap: 4px;
-  background: #18181b;
-  border: 1px solid #27272a;
+  background: var(--app-surface-raised);
+  border: 1px solid var(--app-border);
   border-radius: 6px;
   padding: 5px 10px 5px 6px;
   cursor: pointer;
@@ -183,12 +222,12 @@
   user-select: none;
 
   &:hover {
-    border-color: #3f3f46;
+    border-color: var(--app-border-strong);
   }
 
   span {
-    font-size: 0.72rem;
-    color: #71717a;
+    font-size: 0.75rem;
+    color: var(--app-text-secondary);
     white-space: nowrap;
   }
 
@@ -203,7 +242,7 @@
 
 .tab-bar {
   display: flex;
-  border-bottom: 1px solid #27272a;
+  border-bottom: 1px solid var(--app-border);
   padding: 0 14px;
   gap: 0;
   flex-shrink: 0;
@@ -213,8 +252,8 @@
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
-  color: #52525b;
-  font-size: 0.78rem;
+  color: var(--app-text-muted);
+  font-size: 0.8rem;
   font-weight: 500;
   font-family: inherit;
   padding: 10px 14px;
@@ -224,12 +263,12 @@
   letter-spacing: 0.02em;
 
   &:hover {
-    color: #a1a1aa;
+    color: var(--app-text-primary);
   }
 
   &.active {
-    color: #818cf8;
-    border-bottom-color: #818cf8;
+    color: var(--app-accent);
+    border-bottom-color: var(--app-accent);
   }
 }
 
@@ -242,21 +281,17 @@
 }
 
 .output-text {
-  display: none;
   position: absolute;
   inset: 0;
   padding: 18px 20px;
   font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   font-size: 0.82rem;
   line-height: 1.8;
-  color: #a78bfa;
-  word-break: break-all;
+  color: var(--app-output);
+  word-break: normal;
+  overflow-wrap: anywhere;
   overflow-y: auto;
   white-space: pre-wrap;
-
-  &.active {
-    display: block;
-  }
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -265,16 +300,16 @@
     background: transparent;
   }
   &::-webkit-scrollbar-thumb {
-    background: #3f3f46;
+    background: var(--app-border-strong);
     border-radius: 10px;
   }
 }
 
 .empty-hint {
   display: block;
-  color: #3f3f46;
+  color: var(--app-text-muted);
   font-family: 'Inter', sans-serif;
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-style: italic;
   margin-top: 4px;
   line-height: 1.5;
@@ -284,16 +319,16 @@
 
 .output-footer {
   padding: 12px 14px;
-  border-top: 1px solid #27272a;
+  border-top: 1px solid var(--app-border);
   display: flex;
   justify-content: flex-end;
   flex-shrink: 0;
 }
 
 .copy-btn {
-  background: #6366f1 !important;
+  background: var(--app-cta) !important;
   color: #ffffff !important;
-  font-size: 0.78rem !important;
+  font-size: 0.8rem !important;
   font-family: inherit !important;
   height: 34px !important;
   padding: 0 14px !important;
@@ -308,17 +343,40 @@
     vertical-align: middle !important;
   }
 
-  &:hover {
-    background: #4f46e5 !important;
+  &:hover:not(:disabled) {
+    background: var(--app-cta-hover) !important;
   }
+
+  // Declared after :hover with equal specificity so it wins while hovered/touched
+  &.copied:not(:disabled) {
+    background: var(--app-success) !important;
+  }
+
+  &:disabled {
+    background: var(--app-disabled-bg) !important;
+    color: var(--app-text-muted) !important;
+    cursor: not-allowed;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 // ---- RESPONSIVE ----
 
+// Tablet / mobile: stacked layout, document scrolls, Copy stays reachable
 @media (max-width: 900px) {
   :host {
-    overflow-y: auto;
     height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: visible;
   }
 
   .main-content {
@@ -328,17 +386,90 @@
   }
 
   .editor-pane {
-    min-height: 320px;
+    flex: none;
+    height: 40vh;
+    height: 40dvh;
+    min-height: 200px;
     border-right: none;
-    border-bottom: 1px solid #27272a;
+    border-bottom: 1px solid var(--app-border);
   }
 
   .output-pane {
     width: 100%;
   }
 
+  // Touch targets ≥44px with ≥8px spacing
+  .settings-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+  }
+
+  .setting-item {
+    min-height: 44px;
+
+    span {
+      white-space: normal;
+      line-height: 1.3;
+    }
+  }
+
+  .tab-btn {
+    flex: 1;
+    min-height: 44px;
+  }
+
+  .clear-btn {
+    height: 44px !important;
+    line-height: 44px !important;
+  }
+
+  .theme-btn {
+    width: 44px !important;
+    height: 44px !important;
+    padding: 10px !important;
+  }
+
+  // Output grows with content instead of a nested scroll box
   .output-body {
-    min-height: 220px;
-    position: relative;
+    min-height: 140px;
+  }
+
+  .output-text {
+    position: static;
+    overflow: visible;
+  }
+
+  // Primary action pinned to the bottom of the viewport
+  .output-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+    background: var(--app-surface);
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  }
+
+  .copy-btn {
+    width: 100%;
+    height: 44px !important;
+  }
+}
+
+// Small phones
+@media (max-width: 400px) {
+  .app-header {
+    padding: 0 4px 0 12px;
+  }
+
+  .pane-header .pane-hint {
+    display: none;
+  }
+
+  .settings-bar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tab-btn {
+    padding: 10px 8px;
   }
 }

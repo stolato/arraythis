@@ -6,18 +6,14 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import {ACE_CONFIG, AceConfigInterface, AceModule} from "ngx-ace-wrapper";
-import {MatCardModule} from "@angular/material/card";
-import {MatGridListModule} from "@angular/material/grid-list";
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import {MatInputModule} from "@angular/material/input";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {FormsModule} from "@angular/forms";
 import {MatIconModule} from "@angular/material/icon";
 import {ClipboardModule} from "@angular/cdk/clipboard";
-import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatButtonModule} from "@angular/material/button";
 
 const DEFAULT_ACE_CONFIG: AceConfigInterface = {
+  showPrintMargin: false,
 };
 
 
@@ -36,15 +32,10 @@ const DEFAULT_ACE_CONFIG: AceConfigInterface = {
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    MatCardModule,
-    MatGridListModule,
-    NgbModule,
-    MatInputModule,
     MatSlideToggleModule,
     FormsModule,
     MatIconModule,
     ClipboardModule,
-    MatSnackBarModule,
     MatButtonModule,
   ],
   providers: [{

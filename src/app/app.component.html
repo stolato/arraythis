@@ -1,14 +1,19 @@
 <div class="app-container">
   <header class="app-header">
     <div class="brand">
-      <mat-icon class="brand-icon">data_array</mat-icon>
+      <mat-icon class="brand-icon" aria-hidden="true">data_array</mat-icon>
       <span class="brand-name">ArrayThis</span>
     </div>
     <div class="header-right">
-      <span class="item-badge" *ngIf="array.length > 0">{{ array.length }} items</span>
+      <span class="item-badge" *ngIf="array.length > 0">{{ itemCountLabel }}</span>
       <button mat-button class="clear-btn" (click)="clearEditor()" *ngIf="value">
-        <mat-icon>clear_all</mat-icon>
-        Clear
+        <mat-icon aria-hidden="true">clear_all</mat-icon>
+        Limpar
+      </button>
+      <button mat-icon-button class="theme-btn" (click)="toggleTheme()"
+              [attr.aria-label]="theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'"
+              [title]="theme === 'dark' ? 'Tema claro' : 'Tema escuro'">
+        <mat-icon aria-hidden="true">{{ theme === 'dark' ? 'light_mode' : 'dark_mode' }}</mat-icon>
       </button>
     </div>
   </header>
@@ -16,49 +21,59 @@
   <main class="main-content">
     <section class="editor-pane">
       <div class="pane-header">
-        <span class="pane-label">Input</span>
-        <span class="pane-hint">one item per line</span>
+        <span class="pane-label">Entrada</span>
+        <span class="pane-hint">um item por linha</span>
       </div>
-      <ace [mode]="'text'" [theme]="'monokai'" [(value)]="value" (keyup)="toArray()" (change)="toArray()" class="ace-editor"></ace>
+      <textarea *ngIf="useNativeEditor; else aceEditor"
+                class="native-editor"
+                aria-label="Lista de entrada, um item por linha"
+                placeholder="Cole sua lista aqui, um item por linha"
+                autocapitalize="off" autocomplete="off" autocorrect="off" spellcheck="false"
+                [ngModel]="value" (ngModelChange)="onInput($event)"></textarea>
+      <ng-template #aceEditor>
+        <ace [mode]="'text'" [theme]="'monokai'" [value]="value" (valueChange)="onInput($event)" class="ace-editor"></ace>
+      </ng-template>
     </section>
 
     <section class="output-pane">
       <div class="settings-bar">
-        <label class="setting-item">
+        <label class="setting-item" title="Remove as linhas em branco">
           <mat-slide-toggle color="primary" (change)="IgnoreSpace($event)" [(ngModel)]="checked"></mat-slide-toggle>
-          <span>Skip empty</span>
+          <span>Ignorar vazios</span>
         </label>
-        <label class="setting-item">
+        <label class="setting-item" title="Mantém números como texto (entre aspas)">
           <mat-slide-toggle color="primary" (change)="IgnoreNumber($event)" [(ngModel)]="skipNumber"></mat-slide-toggle>
-          <span>Force strings</span>
+          <span>Números como texto</span>
         </label>
-        <label class="setting-item">
+        <label class="setting-item" title="Remove espaços no início e no fim de cada item">
           <mat-slide-toggle color="primary" (change)="ToggleTrim($event)" [(ngModel)]="trimSpaces"></mat-slide-toggle>
-          <span>Trim spaces</span>
+          <span>Remover espaços</span>
         </label>
-        <label class="setting-item">
+        <label class="setting-item" title="Usa aspas simples em vez de duplas na aba SQL IN">
           <mat-slide-toggle color="primary" (change)="ToggleSqlQuotes($event)" [checked]="sqlQuotes === 'single'"></mat-slide-toggle>
-          <span>SQL ''</span>
+          <span>Aspas simples</span>
         </label>
       </div>
 
       <div class="tab-bar">
-        <button class="tab-btn" [class.active]="selectedTab === 'raw'" (click)="selectedTab = 'raw'">Raw</button>
-        <button class="tab-btn" [class.active]="selectedTab === 'ts'" (click)="selectedTab = 'ts'">TypeScript</button>
-        <button class="tab-btn" [class.active]="selectedTab === 'sql'" (click)="selectedTab = 'sql'">SQL IN</button>
+        <button class="tab-btn" [class.active]="selectedTab === 'raw'" (click)="selectTab('raw')">Texto</button>
+        <button class="tab-btn" [class.active]="selectedTab === 'ts'" (click)="selectTab('ts')">TypeScript</button>
+        <button class="tab-btn" [class.active]="selectedTab === 'sql'" (click)="selectTab('sql')">SQL IN</button>
       </div>
 
       <div class="output-body">
-        <div class="output-text" [class.active]="selectedTab === 'raw'">{{ arrayRaw || '' }}<span *ngIf="!arrayRaw" class="empty-hint">Paste a list on the left to see the result here</span></div>
-        <div class="output-text" [class.active]="selectedTab === 'ts'">{{ array.length > 0 ? JSON.stringify(array) : '' }}<span *ngIf="array.length === 0" class="empty-hint">Paste a list on the left to see the result here</span></div>
-        <div class="output-text" [class.active]="selectedTab === 'sql'">{{ arraySql || '' }}<span *ngIf="!arraySql" class="empty-hint">Paste a list on the left to see the result here</span></div>
+        <div class="output-text active">{{ currentOutput }}<span *ngIf="!currentOutput" class="empty-hint">Cole uma lista no editor para ver o resultado aqui</span></div>
       </div>
 
       <div class="output-footer">
-        <button mat-flat-button class="copy-btn" (click)="copyToClipboard()" [cdkCopyToClipboard]="getCurrentOutput()">
-          <mat-icon>content_copy</mat-icon>
-          Copy to clipboard
+        <button mat-flat-button class="copy-btn" [class.copied]="copied"
+                [disabled]="!currentOutput"
+                [cdkCopyToClipboard]="currentOutput"
+                (cdkCopyToClipboardCopied)="onCopied($event)">
+          <mat-icon aria-hidden="true">{{ copied ? 'check' : 'content_copy' }}</mat-icon>
+          {{ copied ? 'Copiado!' : 'Copiar' }}
         </button>
+        <span class="visually-hidden" aria-live="polite">{{ copied ? 'Copiado para a área de transferência' : '' }}</span>
       </div>
     </section>
   </main>
